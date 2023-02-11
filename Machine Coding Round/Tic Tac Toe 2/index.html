@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Tic Tac Toe</h1>    
+        <div class="game-container" id="game-container">
+            <span data-index="0-0" class="cell"></span>
+            <span data-index="0-1" class="cell"></span>
+            <span data-index="0-2" class="cell"></span>
+            <span data-index="1-0" class="cell"></span>
+            <span data-index="1-1" class="cell"></span>
+            <span data-index="1-2" class="cell"></span>
+            <span data-index="2-0" class="cell"></span>
+            <span data-index="2-1" class="cell"></span>
+            <span data-index="2-2" class="cell"></span>
+        </div>
+        <button id="reset" class="reset">Reset</button>
+        <span id="won" class="won"></span>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById("game-container");
+        const reset = document.getElementById("reset");
+
+        let hash = {};
+        let chance = true;
+        let allFilled = 0;
+
+        gameContainer.addEventListener("click", function (e){
+            // console.log(e.target.dataset.index); // 0-0 1-2 so on...
+            // console.log(typeof(e.target.dataset.index)); // string 
+            // hash[e.target.dataset.index] = "x";
+            // console.log(hash);  // {0-0: 'x'}
+            // console.log(e.target.dataset.index.split("-")); // ["0","0"] ["1","2"] so on...
+            // console.log(e.target.dataset.index.split("-").map(val => parseInt(val))); // [0,0] [1,2] so on...
+            // const [row, column] = e.target.dataset.index.split("-").map(val => parseInt(val));
+            // console.log(row);  // 1
+            // console.log(column); // 2
+            // hash[e.target.dataset.index] = "X";
+            // console.log(hash);  // {0-0: 'X'}
+
+            if (e.target.dataset.index) {
+                // const [row, col] = e.target.dataset.index.split("-").map((val) => parseInt(val));
+
+                if (!hash[e.target.dataset.index]) {
+                    if (chance) {
+                        hash[e.target.dataset.index] = "X";
+                        e.target.classList.add("cell-withX");
+                    } else {
+                        hash[e.target.dataset.index] = "O";
+                        e.target.classList.add("cell-withO");
+                    }
+
+                    chance = !chance;
+                    allFilled++;
+
+                    let result = checkWin();
+                    if (allFilled == 9 || result.includes("Win")) {
+                        document.getElementById("won").textContent = result;
+                        gameContainer.style.pointerEvents = "none";
+                    }
+                }
+            }
+        })
+
+            reset.addEventListener("click", function (e) {
+                const cells = document.querySelectorAll(".cell");
+
+                cells.forEach((val) => {
+                    if (val.classList.contains("cell-withX")) {
+                        val.classList.remove("cell-withX");
+                    } else {
+                        val.classList.remove("cell-withO");
+                    }
+                });
+
+                hash = {};
+                allFilled = 0;
+                chance = true;
+                document.getElementById("won").textContent = "";
+                gameContainer.style.pointerEvents = "auto";
+            });
+
+                function checkWin() {
+                    //row
+                    for (let i = 0; i < 3; i++) {
+                        let set = new Set();
+                        let player = "";
+                        for (let j = 0; j < 3; j++) {
+                            let key = `${i}-${j}`; 
+                            set.add(hash[key]);
+                            player = hash[key];  // player = X or O rhega
+                        }
+                    
+                        if (set.size == 1 && player) {
+                            return `Player ${player} Win`;
+                        }
+                    }
+
+                    //col
+                    for (let j = 0; j < 3; j++) {
+                        let set = new Set();
+                        let player = "";
+                        for (let i = 0; i < 3; i++) {
+                            let key = `${i}-${j}`;
+                            set.add(hash[key]);
+                            player = hash[key];
+                        }
+                        
+                        if (set.size == 1 && player) {
+                            return `Player ${player} Win`;
+                        }
+                    }
+
+                    // diagonal
+                    let i = 0,
+                        j = 0;
+                    let set = new Set();
+                    let player = "";
+                    while (i < 3 && j < 3) {
+                        let key = `${i}-${j}`;
+                        set.add(hash[key]);
+                        player = hash[key];
+                        i++;
+                        j++;
+                    }
+                    
+                    if (set.size == 1 && player) {
+                        return `Player ${player} Win`;
+                    }
+
+                    // anti-daiagonal
+                    (i = 0), (j = 2);
+                    set.clear();
+                    while (i < 3 && j >= 0) {
+                        let key = `${i}-${j}`;
+                        set.add(hash[key]);
+                        player = hash[key];
+                        i++;
+                        j--;
+                    }
+
+                    if (set.size == 1 && player) {
+                        return `Player ${player} Win`;
+                    }
+
+                    return "Match draw";
+                }
+    </script>
+</body>
+</html>

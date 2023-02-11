@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product card</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container" id="container">
+        <!-- <div class="card">
+            <img src="https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg" class="img" alt="img" />
+            <div class="details">
+                <span class="product__name">Fjallraven - Foldsack No. 1 BackPack, Fits 15 Laptps</span>
+                <span class="product__category">men's clothing</span>
+                <div class="all_star">
+                    <span class="star__filled">&#9733;</span>
+                    <span class="star__filled">&#9733;</span>
+                    <span class="star__filled">&#9733;</span>
+                    <span class="star__filled">&#9733;</span>
+                    <span class="star__notfilled">&#9734;</span>
+                </div>
+                <div class="rating__count">Rating Count : <span>0</span></div>
+            </div>
+            <div class="btn">
+                <button class="btn__buy">Buy Now</button>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        let data = [];
+        let container = document.getElementById("container");
+
+        fetch("https://fakestoreapi.com/products")
+        .then((res) => res.json())
+        .then((res) => {
+            data = res;
+
+            data.map((curVal) => {
+
+                let colorRatingStar = parseInt(curVal.rating.rate);
+                let notColoredRatingStar = 5 - colorRatingStar;
+
+                let tempDiv = document.createElement("div");
+                let allStarDiv = document.createElement("div");
+                allStarDiv.setAttribute("id", "all_star");
+                allStarDiv.setAttribute("class", "all_star");
+
+                for(let i = 0; i< colorRatingStar; i++){
+                    allStarDiv.innerHTML += `<span class="star__filled">&#9733;</span>`
+                }
+
+                for(let i = 0; i< notColoredRatingStar; i++){
+                    allStarDiv.innerHTML += `<span class="star__notfilled">&#9734;</span>`
+                }
+
+                tempDiv.appendChild(allStarDiv);
+
+                container.innerHTML += `<div class="card">
+                        <img src=${curVal.image} class="img" alt="img" />
+                        <div class="details">
+                            <span class="product__name">${curVal.title}</span>
+                            <span class="product__category">${curVal.category}</span>
+                            ${tempDiv.innerHTML}
+                            <div class="rating__count">Rating Count : <span>${curVal.rating.count}</span></div>
+                        </div>
+                        <div class="btn">
+                            <button class="btn__buy">Buy Now</button>
+                        </div>
+                    </div>
+                `;
+            })
+        })
+    </script>
+</body>
+</html>

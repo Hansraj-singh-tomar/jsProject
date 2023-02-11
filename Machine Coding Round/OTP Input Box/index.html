@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Input Box</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="inputs" class="inputs">
+            <input class="input" inputmode="numeric" type="text" maxlength="1" />
+            <input class="input" inputmode="numeric" type="text" maxlength="1" />
+            <input class="input" inputmode="numeric" type="text" maxlength="1" />
+            <input class="input" inputmode="numeric" type="text" maxlength="1" />
+        </div>
+    </div>
+
+    <script>
+        const inputs = document.getElementById("inputs");
+        inputs.addEventListener("input", function(e) {
+            const target = e.target;
+            const val = target.value;
+
+            if(isNaN(val)) {  // agar meri value nuber nhi hai to ya true aane par mera if vala part work karega 
+                target.value = "";
+                return;
+            }
+
+            if(val != "") {
+               const next = target.nextElementSibling;
+               if (next) {
+                next.focus();
+               } 
+            }
+        })
+
+        inputs.addEventListener("keyup", function(e) {
+            const target = e.target;
+            const key = e.key.toLowerCase();
+            // console.log(key);  // backspace ya jo bhi key me press kar rha hu vo mujhe yah dekhane ko milegi
+
+            if(key === "backspace" || key === "delete") {
+                target.value = "";
+                const prev = target.previousElementSibling;
+    
+                if(prev) {
+                    prev.focus();
+                }
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Counter Application</h1>
+        <h1 id="count">0</h1>
+        <label for="">Icncrement and Decrement By</label>
+        <input id="inputVal" type="number">
+        <div>
+            <button onclick="add()">+</button>
+            <button onclick="sub()">-</button>
+            <div>
+                <button onclick="reset()">Reset</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let count = document.getElementById("count");
+        let input = document.getElementById("inputVal");
+        let inputValue = 1;
+        
+        let countVal = parseInt(count.innerText);
+
+        input.addEventListener("change", (e) => {
+            e.preventDefault();
+            inputValue = parseInt(e.target.value);
+            // console.log(inputValue);
+        })
+        
+        function add(){
+            count.innerText = countVal = countVal + inputValue;
+        }
+        function sub(){
+            count.innerText = countVal = countVal - inputValue;
+        }
+
+        function reset(){
+            count.innerText = 0;
+        }
+    </script>
+</body>
+</html>

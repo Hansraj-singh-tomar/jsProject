@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Start Rating Component</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Star Rating Component</h1>
+        <div id="star-container" class="star-container">
+            <span class="star" data-index="1">&#9733;</span>
+            <span class="star" data-index="2">&#9733;</span>
+            <span class="star" data-index="3">&#9733;</span>
+            <span class="star" data-index="4">&#9733;</span>
+            <span class="star" data-index="5">&#9733;</span>
+        </div>
+        <h2 id="count">Rating Count : 0</h2>
+    </div>
+
+    <script>
+        let container = document.getElementById("star-container");
+        let star = document.querySelectorAll(".star");
+        // console.log(star); // NodeList(5) [span.star, span.star, span.star, span.star, span.star]
+        let filled = 0;
+        
+        container.addEventListener("click", function(e){
+           // let currentCliked = e.target.dataset;
+           // console.log(currentCliked); // DOMStringMap {index: '5'}
+            
+        //    console.log(filled);
+            let currentClicked = e.target.dataset.index;
+            // console.log(currentCliked); // 3
+
+            for(let i=0; i < filled; i++){
+                star[i].classList.remove("star-filled");
+            }
+
+            for(let i=0; i < currentClicked; i++){
+                star[i].classList.add("star-filled");
+            }
+
+            
+            document.getElementById("count").innerText = `
+            Rating Count : ${currentClicked} 
+            `
+            filled = currentClicked;
+
+        });
+
+        container.addEventListener("mouseover", function(e){   
+            let currentClicked = e.target.dataset.index;
+
+            for(let i=0; i < 5; i++){
+                star[i].classList.remove("star-filled");
+            }
+
+            for(let i=0; i < currentClicked; i++){
+                star[i].classList.add("star-filled");
+            }
+
+        });
+
+        container.addEventListener("mouseleave", function(e){    
+
+            for(let i=0; i < 5; i++){
+                star[i].classList.remove("star-filled");
+            }
+
+            for(let i=0; i < filled; i++){
+                star[i].classList.add("star-filled");
+            }
+        })
+    </script>
+</body>
+</html>

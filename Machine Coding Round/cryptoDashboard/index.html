@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 class="heading">Crypto Dashboard</h1>
+    <div id="card-container" class="card-container">
+        <!-- <div class="cart">
+            <div class="image">
+                image
+            </div>
+            <div class="details">
+                <div class="row">
+                    <span class="name">Name</span>
+                    <span class="price">Price</span>
+                </div>
+                <div class="row">
+                    <span class="symbol">shortName</span>
+                    <span class="percent">change%</span>
+                </div>
+            </div>
+        </div> -->
+    </div>
+
+    <script>
+        let data = [];
+        let cardContainer = document.getElementById("card-container");
+
+       document.addEventListener("DOMContentLoaded", function (event) {
+            fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=inr&order=market_cap_desc&per_page=100&page=1&sparkline=false")
+                .then((res) => res.json())
+                .then((res) => {
+                    data = res;
+                    console.log(res);
+                    data.map((curElem) => {
+                        cardContainer.innerHTML += `<div class="cart">
+                            <div class="image">
+                                <img src=${curElem.image} class="img"> 
+                            </div>
+                            <div class="details">
+                                <div class="row">
+                                    <span class="name">${curElem.name}</span>
+                                    <span class="price">${curElem.current_price}</span>
+                                </div>
+                                <div class="row">
+                                    <span class="symbol">${curElem.symbol}</span>
+                                    <span class="percent">${curElem.market_cap_change_percentage_24h}<span>
+                                </div>
+                            </div>
+                        </div>`
+                    })
+                })
+        }) 
+    </script>
+</body>
+</html>

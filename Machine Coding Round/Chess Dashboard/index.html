@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 class="heading">Chess Dashboard</h1>
+    <table id="table" class="table" cellspacing="0"></table>
+    
+    <script>
+        let table = document.getElementById("table");
+
+        for(let i = 0; i < 8; i++) { // row
+
+            let tr = document.createElement("tr");
+            let white = i % 2 == 0 ? true : false;
+            
+            for(let j = 0; j < 8; j++) {  // col
+                let td = document.createElement("td");
+                if(white){
+                    td.setAttribute("class", "box white");
+                } else {
+                    td.setAttribute("class", "box black");
+                }
+                white = !white;  // true ka false and false ka true ho jayega
+                td.setAttribute("data-index", `${i}-${j}`);
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+
+        table.addEventListener("mouseover", function(e) {
+            // let temp = e.target.dataset.index;
+            // console.log(temp); // 1-7 0-1 .....
+            // let temp = e.target.dataset.index.split("-");
+            // console.log(temp); // (2)['1','7']
+            let temp = e.target.dataset.index.split("-").map((val) => parseInt(val));
+            // console.log(temp); // (2)[1,7]
+            let row = temp[0];
+            let col = temp[1];
+            let str = `${row}-${col}`;
+            // console.log(str); // 1-7 ya 0-0 hover karne par
+            let hash = {}; // { 1-7 : true}
+            hash[str] = true;
+
+            hash = findTopLeft(row, col, hash);
+            hash = findTopRight(row, col, hash);
+            hash = findbottomLeft(row, col, hash);
+            hash = findbottomRight(row, col, hash);
+
+            let cells = document.querySelectorAll("td");
+            console.log(cells);
+
+
+            for(let i = 0; i < cells.length; i++) {
+                cells[i].classList.remove("blue");
+            }
+
+            for(let i = 0; i < cells.length; i++) {
+               let str = `${cells[i].closest("tr").rowIndex}-${cells[i].cellIndex}`;
+            //    console.log(str); // 0-0 0-1 ..1-1.....1-7.....7-1....7-7 so on 
+            //    console.log(hash); // {0-0: true, 1-1: true, 2-2: true, 3-3: true, 4-4: true, 6-6:true, 7-7: true}
+               if(hash[str]) {
+                cells[i].classList.add("blue")
+               } 
+            }
+        });
+
+        table.addEventListener("mouseleave", function (e) {
+            const cells = document.querySelectorAll("td");
+
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].classList.remove("blue");
+            }
+        });
+
+            function findTopLeft(row, col, hash) {
+                row--;
+                col--;
+                while (row >= 0 && col >= 0) {
+                    let key = `${row}-${col}`;
+                    hash[key] = true;
+                    row--;
+                    col--;
+                }
+                return hash;    
+            }
+             
+            function findTopRight(row, col, hash) {
+                row--;
+                col++;
+                while (row >= 0 && col < 8) {
+                    let key = `${row}-${col}`;
+                    hash[key] = true;
+                    row--;
+                    col++;
+                }
+
+                return hash;
+            }
+
+            function findbottomLeft(row, col, hash) {
+                row++;
+                col--;
+                while (row < 8 && col >= 0) {
+                    let key = `${row}-${col}`;
+                    hash[key] = true;
+                    row++;
+                    col--;
+                }
+
+                return hash;
+            }
+
+            function findbottomRight(row, col, hash) {
+                row++;
+                col++;
+                while (row < 8 && col < 8) {
+                    let key = `${row}-${col}`;
+                    hash[key] = true;
+                    row++;
+                    col++;
+                }
+
+                return hash;
+            }
+    </script>
+</body>
+</html>

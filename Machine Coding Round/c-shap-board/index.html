@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Sharp Board</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="box-container" class="box-container">
+            <div class="row">
+                <div class="box" data-index="0"></div>
+                <div class="box" data-index="1"></div>
+                <div class="box" data-index="2"></div>
+            </div>
+            <div class="row">
+                <div class="box" data-index="3"></div>
+            </div>
+            <div class="row">
+                <div class="box" data-index="4"></div>
+                <div class="box" data-index="5"></div>
+                <div class="box" data-index="6"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let boxContainer = document.getElementById("box-container");
+            let box = document.querySelectorAll(".box");
+            let queue = [];
+
+            boxContainer.addEventListener("click", function (e) {
+                let index = e.target.dataset.index;
+
+                if (index != undefined) {
+                    queue.push(index);
+                    box[index].classList.add("green-color");
+                }
+
+                if (queue.length == 7) {
+                    let cnt = 0;
+                    while (queue.length > 0) {
+                        let ind = queue.shift();
+                        // console.log(ind);
+                        cnt++;
+                        setTimeout(() => {
+                            box[ind].classList.remove("green-color");
+                        }, cnt * 1000);
+                    }
+                }
+        });
+    </script>
+</body>
+</html>
