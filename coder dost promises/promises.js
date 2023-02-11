@@ -61,19 +61,19 @@
 // Now we will learn Promise using code
 
 // 1: first example
-// console.log("Start");
-// const p1 = new Promise((resolve, reject) => {
-//     // setTimeOut ka use kar ke ham delay create karenge
-//     setTimeout(() => {
-//         // resolve("1");
-//         reject("1");     // yha ham resolve and reject ko ek sath call nhi kar sakte hai
-//     }, 2000);
-// })
-// p1.then(data => {
-//     console.log(data);
-// })
+console.log("Start");
+const p1 = new Promise((resolve, reject) => {
+    // setTimeOut ka use kar ke ham delay create karenge
+    setTimeout(() => {
+        // resolve("1");
+        reject("1");     // yha ham resolve and reject ko ek sath call nhi kar sakte hai
+    }, 2000);
+})
+p1.then(data => {
+    console.log(data);
+})
 
-// console.log("End");
+console.log("End");
 // output - pehle start -> end -> 1                         // resolve ko call karne par
 // output - pehle start -> end -> uncaught (in promise) 1   // reject ko call karne par
 // so ye chij asynchronously chal rhi hai
@@ -126,7 +126,7 @@
 // // issi karan ham dusra then bhi lga pate hai
 
 
-// 4: Ab ham 2 promises ba rhe hai
+// 4: Ab ham 2 promises bna rhe hai
 // console.log("Start");
 // const p1 = new Promise((resolve, reject) => {
 //     // setTimeOut ka use kar ke ham delay create karenge

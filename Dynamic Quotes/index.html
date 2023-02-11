@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Quotes Website</title>
+</head>
+<body>
+    <div>
+        <div>
+            <p id="quotes"></p>
+            <p id="author"></p>
+            <button id="newQ">New Quote</button>
+            <button id="tweetMe"> Tweet It</button>
+        </div>
+    </div>
+    
+    <script>
+        const quotes = document.getElementById('quotes')
+        const newQ = document.getElementById('newQ');
+        const author = document.getElementById('author');
+        const tweetMe = document.getElementById("tweetMe");
+        
+        let realData = " ";
+        let quotesData = " ";
+
+        console.log("hii");
+        console.log(realData); // it's not showing anything
+
+        const tweetNow = () => {
+            let tweetPost = `https://twitter.com/intent/tweet?text?={quotesData.text} {quotesData.author} `;
+            window.open(tweetPost);
+        }
+
+        const getNewQuotes = () => {
+            let randomNum = Math.floor(Math.random()*20);
+            quotesData = realData[randomNum];
+            // console.log(quotesData.text);
+            quotes.innerHTML = `${quotesData.text}`;
+            author.innerHTML = `${quotesData.author}`;
+        }
+        
+        const getQuotes = async () => {
+            try {
+                const data = await fetch("https://type.fit/api/quotes");
+                // console.log(data); // body: ReadableStream
+                // console.log(data.json()); 
+                realData = await data.json();
+                // console.log(realData);  
+                // console.log(realData[0]);  
+                // console.log(realData[0].text);  // Genius is one percent inspiration and ninety-nine percent perspiration.
+                // console.log(realData[0].author); // Thomas Edison
+                getNewQuotes(); // yha hamne iss function ko iss liyee call kiya taki jab page load hote hi qoutes and auther name show kar sake  
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        newQ.addEventListener('click', getNewQuotes);
+        tweetMe.addEventListener('click', tweetNow);
+        getQuotes();
+    </script>
+</body>
+</html>
