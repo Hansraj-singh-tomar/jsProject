@@ -37,17 +37,39 @@ const getUserData = async() => {
     }
 }
 
-userName.addEventListener('input', (e) => {
-    const val = e.target.value;
-    // console.log(val);
+// userName.addEventListener('input', (e) => {
+//     const val = e.target.value;
+//     // console.log(val);
 
+//     userArr.filter((curElem) => {
+//         curElem.innerText.toLowerCase().includes(val.toLowerCase()) ?  // curElem.innerText = mojombo
+//         curElem.classList.remove('hide') :
+//         curElem.classList.add('hide')
+//     })
+// })
+
+// that's a code of debouncing
+const debounce = (func, timeOut = 500) => {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            func.apply(this,args);
+        },timeOut);
+    }
+}
+const getUser = (query) => {
     userArr.filter((curElem) => {
-        curElem.innerText.toLowerCase().includes(val.toLowerCase()) ?  // curElem.innerText = mojombo
+        curElem.innerText.toLowerCase().includes(query.toLowerCase()) ?  // curElem.innerText = mojombo
         curElem.classList.remove('hide') :
         curElem.classList.add('hide')
-    })
+    })  
+}
+const debouncedGetData = debounce(getUser, 500);
+userName.addEventListener('keyup', (event) => {
+    debouncedGetData(event.target.value);
 })
 
-// console.log(userArr);
 
+// console.log(userArr);
 getUserData();

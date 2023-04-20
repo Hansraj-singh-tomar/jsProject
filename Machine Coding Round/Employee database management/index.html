@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoloyee database management system</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <h1>Emoloyee Database Management System</h1>
+            <button class="createEmployee">Add Employee</button>
+        </header>
+
+        <div class="employees">
+            <div class="employees__names">
+                <span class="employees__names--title">Employee List</span>
+                <div class="employees__names--list">
+                   <!-- <span class="employee__names--item" id="1001">Thomas Leanon <i class="employeeDelete">❌</i></span> -->
+                </div>
+            </div>
+            <div class="employees__single">
+                <span class="employees__single--title">Employee Information</span>
+                <div class="employees__single--info">
+                    <!-- <img src="" alt="">
+                    <span>Hansraj singh tomar</span>
+                    <span>Address !</span>
+                    <span>hans@gmail.com</span>
+                    <span>Mobile - xxxxxxxxxxxxxxxx</span>
+                    <span>DOB - 26/08/1979</span> -->
+                </div>
+            </div>
+
+            <!-- Add Employee Modal -->
+            <div class="addEmployee">
+                <form class="addEmployee_create">
+                    Add a new Employee
+                    <div>
+                        <input type="text" name="firstName" placeholder="First Name" required />
+                        <input type="text" name="lastName" placeholder="Last Name" required />
+                    </div>
+                    <input type="text" name="imageUrl" placeholder="Image URL (Optional)" />
+                    <input type="email" name="email" placeholder="Email" required/>
+                    <input type="number" name="contactNumber" placeholder="Contact" required/>
+                    <input type="number" name="salary" placeholder="Salary" required/>
+                    <input type="text" name="address" placeholder="Address" required/>
+                    <input type="date" name="dob" placeholder="Date of Birth" class="addEmployee_create--dob" required/>
+                    <input type="submit" class="addEmployee_create--submit" value="Submit">
+                </form>
+            </div>
+        </div>        
+    </div>
+    
+    <script>
+        (async function (){
+            const data = await fetch('./src/data.json');
+            const res = await data.json();
+            console.log(res);
+
+            let employees = res;
+            let selectedEmployeeId = employees[0].id;
+            let selectedEmployee = employees[0];
+
+            const employeeList = document.querySelector(".employees__names--list");
+            const employeeInfo = document.querySelector(".employees__single--info");
+
+            // Add employee logic later
+            const createEmployee = document.querySelector(".createEmployee");
+            const addEmployeeModal = document.querySelector(".addEmployee");
+            const addEmployeeForm = document.querySelector(".addEmployee_create");
+
+            createEmployee.addEventListener("click", () => {
+                addEmployeeModal.style.display = "flex";
+            });
+
+            addEmployeeModal.addEventListener("click", (e) => {
+                if (e.target.className === "addEmployee") {
+                    addEmployeeModal.style.display = "none";
+                }
+            });
+
+              // Set Employee age to be entered minimum 18 years
+            const dobInput = document.querySelector(".addEmployee_create--dob");
+            dobInput.max = `${new Date().getFullYear() - 18}-${new Date().toISOString().slice(5, 10)}`
+
+
+            addEmployeeForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(addEmployeeForm);
+                const values = [...formData.entries()]
+                // console.log(values); // (8) [Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2), Array(2)]  //  0: (2) ['fistName', 'hansraj singh '], 1: (2) ['lastName', 'tomar']
+                let empData = {}
+                values.forEach((val) => {
+                    empData[val[0]] = val[1]; // let empData = { firstName: "hansraj singh"} something like that values gonna store in expData object  
+                })
+                // console.log(empData); // {fistName: 'hansraj singh ', lastName: 'tomar', imageUrl: '', email: 'onur@dkdffemail.com', contactNumber: '123456789',dob: "1994-02-24"}
+                empData.id = employees[employees.length - 1].id + 1; // last vale emp ki jo id hai usme plus one kar dena hai and employee.length - 1 se ham last vale employee ko get kar sakte hai 
+                empData.age = new Date().getFullYear() - parseInt(empData.dob.slice(0, 4), 10);
+                empData.imageUrl = empData.imageUrl || "https://cdn-icons-png.flaticon.com/512/0/93.png";
+                employees.push(empData);
+                renderEmployees();
+                addEmployeeForm.reset();
+                addEmployeeModal.style.display = "none";
+            })
+            // Add Employee - End
+
+            // selected Employee logic
+            employeeList.addEventListener("click", (e) => {
+                if (e.target.tagName === "SPAN" && selectedEmployeeId !== e.target.id) {
+                    selectedEmployeeId = e.target.id; 
+                    renderEmployees();
+                    // render single employee
+                    renderSingleEmployee();
+                } 
+                // Select Employee Logic - END
+
+                // Employee Delete Logic - START
+                if (e.target.tagName === "I") {
+                    employees = employees.filter(
+                        (emp) => String(emp.id) !== e.target.parentNode.id
+                    );
+                    if (String(selectedEmployeeId) === e.target.parentNode.id) {
+                        selectedEmployeeId = employees[0]?.id || -1; // If employees[0] is null or undefined, the entire expression will return undefined. // || -1: This is using the logical OR (||) operator to provide a default value of -1 if the first expression evaluates to undefined.
+                        selectedEmployee = employees[0] || {};
+                        renderSingleEmployee();
+                    }
+                    renderEmployees();
+                }
+                // Employee Delete Logic - END
+            })
+
+            const renderEmployees = () => {
+                employeeList.innerHTML = "";
+                employees.forEach((emp) => {
+                    const employee = document.createElement('span');
+                    employee.classList.add("employees__names--item");
+
+                    // console.log(emp.id, selectedEmployeeId); // 1001 1001 and 1002 1001 and so on ...
+
+                    if(parseInt(selectedEmployeeId) === emp.id) {
+                        employee.classList.add("selected");
+                        selectedEmployee = emp;
+                    }
+
+                    employee.setAttribute("id", emp.id);
+                    employee.innerHTML = `${emp.firstName} ${emp.lastName} <i class="employeeDelete">❌</i>`;
+                    employeeList.append(employee);
+                });
+            };
+
+            const renderSingleEmployee = () => {
+                // Employee Delete Logic - START
+                if (selectedEmployeeId === -1) {
+                    employeeInfo.innerHTML = "";
+                    return;
+                }
+                // Employee Delete Logic - END
+
+                employeeInfo.innerHTML = `
+                    <img src="${selectedEmployee.imageUrl}"/>
+                    <span class="employees__single--heading">
+                    ${selectedEmployee.firstName} ${selectedEmployee.lastName} (${selectedEmployee.age})
+                    </span>
+                    <span>${selectedEmployee.address}</span>
+                    <span>${selectedEmployee.email}</span>
+                    <span>Mobile - ${selectedEmployee.contactNumber}</span>
+                    <span>DOB - ${selectedEmployee.dob}</span>
+                `;
+            } 
+
+            renderEmployees();
+            if (selectedEmployee) renderSingleEmployee();
+        })();
+
+    </script>
+</body>
+</html>
+
+<!-- 
+
+    const str = "1234";
+    const num = parseInt(str); // or parseInt(str, 10); here 10 is bydefault added
+    console.log(num); // Output: 1234
+
+    In this example, the parseInt() method takes the string "1234" and converts it into the integer number 1234. Since no radix value is provided, the method assumes a base 10 number.
+
+ -->
